@@ -1,4 +1,4 @@
-Support SAAS remote user based SSO authentication and get informations from LDAP server.
+Support JAAS remote user based SSO authentication and get informations from LDAP server.
 
 # This authenticator execute the following process
 
