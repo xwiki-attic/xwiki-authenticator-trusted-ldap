@@ -34,7 +34,7 @@
   <artifactId>xwiki-authenticator-trusted-ldap</artifactId>
   <name>XWiki Authenticator Trusted LDAP</name>
   <version>1.1-SNAPSHOT</version>
-  <description>Support SAAS remote user based SSO authentication and get informations from LDAP server</description>
+  <description>Support JAAS remote user based SSO authentication and get informations from LDAP server</description>
   <properties>
     <!-- Too lazy to fix them right now. -->
     <xwiki.checkstyle.skip>true</xwiki.checkstyle.skip>
