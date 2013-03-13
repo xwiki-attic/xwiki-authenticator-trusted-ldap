@@ -20,7 +20,7 @@ If SSO fail, it tries standard LDAP authentication.
     #-#   login, password, ldap_server, ldap_base_DN, ldap_bind_DN, ldap_bind_pass
     #
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
-    # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_base_DN
+    # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
     
     #-# Indicate how to convert each found property
     #
