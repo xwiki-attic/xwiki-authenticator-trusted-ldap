@@ -60,3 +60,9 @@ xwiki.authentication.authclass=com.xwiki.authentication.trustedldap.TrustedLDAPA
 # TODO
 
 * generic support of LDAP property in remoteUserMapping configuration
+
+# Changelog
+
+## 1.0.1
+
+Fix documentation (mostly SAAS -> JAAS).
