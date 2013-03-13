@@ -63,6 +63,6 @@ xwiki.authentication.authclass=com.xwiki.authentication.trustedldap.TrustedLDAPA
 
 # Changelog
 
-## 1.0.1
+## 1.0.1 and 1.0.2
 
 Fix documentation (mostly SAAS -> JAAS).
