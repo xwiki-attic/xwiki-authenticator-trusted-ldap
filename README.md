@@ -57,6 +57,8 @@ xwiki.authentication.authclass=com.xwiki.authentication.trustedldap.TrustedLDAPA
     <logger name="com.xwiki.authentication.Config" level="trace"/>
     <logger name="com.xwiki.authentication.trustedldap" level="trace"/>
 
+See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general information about logging in XWiki.
+
 # TODO
 
 * generic support of LDAP property in remoteUserMapping configuration
