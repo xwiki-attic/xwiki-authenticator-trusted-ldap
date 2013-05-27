@@ -27,7 +27,6 @@ import junit.framework.Assert;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.xpn.xwiki.XWiki;
@@ -73,39 +72,56 @@ public class TrustedLDAPConfigTest extends AbstractBridgedComponentTestCase
     public void getLDAPBindDN()
     {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("ldap_bind_DN", getContext()); will(returnValue("preferences {0} {1} bind dn"));
-        }});
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("ldap_bind_DN", getContext());
+                will(returnValue("preferences {0} {1} bind dn"));
+            }
+        });
 
         Map<String, String> remoteUserLdapConfiguration = new HashMap<String, String>();
-        
+
         remoteUserLdapConfiguration.put("login", "login");
         remoteUserLdapConfiguration.put("password", "password");
 
-        Assert.assertEquals("preferences login password bind dn", this.config.getLDAPBindDN(remoteUserLdapConfiguration, getContext()));
-        
+        Assert.assertEquals("preferences login password bind dn",
+            this.config.getLDAPBindDN(remoteUserLdapConfiguration, getContext()));
+
+        remoteUserLdapConfiguration.put("login", "login, with, coma");
+
+        Assert.assertEquals("preferences login\\, with\\, coma password bind dn",
+            this.config.getLDAPBindDN(remoteUserLdapConfiguration, getContext()));
+
+        remoteUserLdapConfiguration.put("login", "login");
+
         remoteUserLdapConfiguration.put("ldap_bind_DN", "custom {0} {1} bind dn");
-        
-        Assert.assertEquals("custom login password bind dn", this.config.getLDAPBindDN(remoteUserLdapConfiguration, getContext()));
+
+        Assert.assertEquals("custom login password bind dn",
+            this.config.getLDAPBindDN(remoteUserLdapConfiguration, getContext()));
     }
 
     @Test
     public void getLDAPBindPassword()
     {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("ldap_bind_pass", getContext()); will(returnValue("preferences {0} {1} bind pass"));
-        }});
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("ldap_bind_pass", getContext());
+                will(returnValue("preferences {0} {1} bind pass"));
+            }
+        });
 
         Map<String, String> remoteUserLdapConfiguration = new HashMap<String, String>();
-        
+
         remoteUserLdapConfiguration.put("login", "login");
         remoteUserLdapConfiguration.put("password", "password");
 
-        Assert.assertEquals("preferences login password bind pass", this.config.getLDAPBindPassword(remoteUserLdapConfiguration, getContext()));
-        
+        Assert.assertEquals("preferences login password bind pass",
+            this.config.getLDAPBindPassword(remoteUserLdapConfiguration, getContext()));
+
         remoteUserLdapConfiguration.put("ldap_bind_pass", "custom {0} {1} bind pass");
-        
-        Assert.assertEquals("custom login password bind pass", this.config.getLDAPBindPassword(remoteUserLdapConfiguration, getContext()));
+
+        Assert.assertEquals("custom login password bind pass",
+            this.config.getLDAPBindPassword(remoteUserLdapConfiguration, getContext()));
     }
 }
