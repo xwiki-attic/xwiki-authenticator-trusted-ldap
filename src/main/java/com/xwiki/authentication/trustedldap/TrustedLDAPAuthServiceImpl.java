@@ -20,6 +20,8 @@
 package com.xwiki.authentication.trustedldap;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +30,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.ArrayUtils;
 import org.securityfilter.realm.SimplePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,22 +61,34 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
     private TrustedLDAPConfig config;
 
-    protected String encryptText(String text, XWikiContext context)
+    private static Cipher getCipher(boolean encrypt, XWikiContext context) throws NoSuchAlgorithmException,
+        NoSuchPaddingException, InvalidKeyException
+    {
+        Cipher cipher = null;
+
+        String secretKey = context.getWiki().Param("xwiki.authentication.encryptionKey");
+
+        if (secretKey != null) {
+            byte[] secretKeyBytes = ArrayUtils.subarray(secretKey.getBytes(), 0, 24);
+            SecretKeySpec cryptKey = new SecretKeySpec(secretKeyBytes, "TripleDES");
+            cipher = Cipher.getInstance("TripleDES");
+            cipher.init(encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE, cryptKey);
+        } else {
+            LOGGER.error("Encryption key not defined (property xwiki.authentication.encryptionKey in xwiki.cfg)");
+        }
+
+        return cipher;
+    }
+
+    static String encryptText(String text, XWikiContext context)
     {
         try {
-            String secretKey = null;
-            secretKey = context.getWiki().Param("xwiki.authentication.encryptionKey");
-            secretKey = secretKey.substring(0, 24);
+            Cipher cipher = getCipher(true, context);
 
-            if (secretKey != null) {
-                SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), "TripleDES");
-                Cipher cipher = Cipher.getInstance("TripleDES");
-                cipher.init(Cipher.ENCRYPT_MODE, key);
+            if (cipher != null) {
                 byte[] encrypted = cipher.doFinal(text.getBytes());
                 String encoded = new String(Base64.encodeBase64(encrypted));
                 return encoded.replaceAll("=", "_");
-            } else {
-                LOGGER.error("Encryption key not defined");
             }
         } catch (Exception e) {
             LOGGER.error("Failed to encrypt text", e);
@@ -81,22 +97,15 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         return null;
     }
 
-    protected String decryptText(String text, XWikiContext context)
+    static String decryptText(String text, XWikiContext context)
     {
         try {
-            String secretKey = null;
-            secretKey = context.getWiki().Param("xwiki.authentication.encryptionKey");
-            secretKey = secretKey.substring(0, 24);
+            Cipher cipher = getCipher(false, context);
 
-            if (secretKey != null) {
-                SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), "TripleDES");
-                Cipher cipher = Cipher.getInstance("TripleDES");
-                cipher.init(Cipher.DECRYPT_MODE, key);
+            if (cipher != null) {
                 byte[] encrypted = Base64.decodeBase64(text.replaceAll("_", "=").getBytes("ISO-8859-1"));
                 String decoded = new String(cipher.doFinal(encrypted));
                 return decoded;
-            } else {
-                LOGGER.error("Encryption key not defined");
             }
         } catch (Exception e) {
             LOGGER.error("Failed to decrypt text", e);

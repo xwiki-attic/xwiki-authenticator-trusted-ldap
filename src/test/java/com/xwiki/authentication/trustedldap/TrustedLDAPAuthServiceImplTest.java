@@ -19,6 +19,9 @@
  */
 package com.xwiki.authentication.trustedldap;
 
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -56,10 +59,15 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         getContext().setDatabase("xwiki");
 
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).Param(with(any(String.class))); will(returnValue(null));
-        }});
-        
+        {
+            {
+                allowing(xwikiMock).Param(with(not(equal("xwiki.authentication.encryptionKey"))));
+                will(returnValue(null));
+                allowing(xwikiMock).Param("xwiki.authentication.encryptionKey");
+                will(returnValue("$é zefzekz fzeuhfkz ead;:azdazd\t"));
+            }
+        });
+
         this.authenticator = new TrustedLDAPAuthServiceImpl();
     }
 
@@ -71,67 +79,93 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
 
     @Test
     public void testParseRemoteUserWithNoConfiguration() throws Exception
-    {             
+    {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext()); will(returnValue(null));
-        }});
-        
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext());
+                will(returnValue(null));
+            }
+        });
+
         Map<String, String> ldapConfiguration = this.authenticator.parseRemoteUser("remoteuser", getContext());
-        
+
         Assert.assertEquals("remoteuser", ldapConfiguration.get("login"));
     }
-    
+
     @Test
     public void testParseRemoteUserWithSimplePattern() throws Exception
-    {       
+    {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext()); will(returnValue("remote"));
-        }});
-        
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext());
+                will(returnValue("remote"));
+            }
+        });
+
         Map<String, String> ldapConfiguration = this.authenticator.parseRemoteUser("remoteuser", getContext());
-        
+
         Assert.assertEquals("remote", ldapConfiguration.get("login"));
     }
-    
+
     @Test
     public void testParseRemoteUserWithGroupsPattern() throws Exception
-    {       
+    {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext()); will(returnValue("(remote)(user)"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext()); will(returnValue("login"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext()); will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext()); will(returnValue(null));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext()); will(returnValue(null));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext()); will(returnValue(null));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_DN", getContext()); will(returnValue(null));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext()); will(returnValue(null));
-        }});
-        
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext());
+                will(returnValue("(remote)(user)"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
+                will(returnValue("login"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
+                will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_DN", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext());
+                will(returnValue(null));
+            }
+        });
+
         Map<String, String> ldapConfiguration = this.authenticator.parseRemoteUser("remoteuser", getContext());
-        
+
         Assert.assertEquals("remote", ldapConfiguration.get("login"));
         Assert.assertEquals("user", ldapConfiguration.get("ldap_server"));
         Assert.assertEquals("user", ldapConfiguration.get("ldap_base_DN"));
     }
-    
+
     @Test
     public void testParseRemoteUserWithGroupsPatternandConversions() throws Exception
-    {       
+    {
         this.mockery.checking(new Expectations()
-        {{
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext()); will(returnValue("(.+)@(.+)"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext()); will(returnValue("login"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext()); will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext()); will(returnValue(null));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext()); will(returnValue("doMain=my.domain.com|domain2=my.domain2.com"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext()); will(returnValue("dOmain=dc=my,dc=domain,dc=com|domain2=dc=my,dc=domain2,dc=com"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_DN", getContext()); will(returnValue("doMain=cn=bind,dc=my,dc=domain,dc=com|domain2=cn=bind,dc=my,dc=domain2,dc=com"));
-            allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext()); will(returnValue("doMain=password|domain2=password2"));
-        }});
-        
+        {
+            {
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserParser", getContext());
+                will(returnValue("(.+)@(.+)"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
+                will(returnValue("login"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
+                will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
+                will(returnValue("doMain=my.domain.com|domain2=my.domain2.com"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext());
+                will(returnValue("dOmain=dc=my,dc=domain,dc=com|domain2=dc=my,dc=domain2,dc=com"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_DN", getContext());
+                will(returnValue("doMain=cn=bind,dc=my,dc=domain,dc=com|domain2=cn=bind,dc=my,dc=domain2,dc=com"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext());
+                will(returnValue("doMain=password|domain2=password2"));
+            }
+        });
+
         Map<String, String> ldapConfiguration = this.authenticator.parseRemoteUser("user@domain", getContext());
 
         Assert.assertEquals("user", ldapConfiguration.get("login"));
@@ -139,7 +173,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         Assert.assertEquals("dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password", ldapConfiguration.get("ldap_bind_pass"));
-        
+
         ldapConfiguration = this.authenticator.parseRemoteUser("user@domain2", getContext());
 
         Assert.assertEquals("user", ldapConfiguration.get("login"));
@@ -147,5 +181,13 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         Assert.assertEquals("dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password2", ldapConfiguration.get("ldap_bind_pass"));
+    }
+
+    @Test
+    public void testEncryptDecrupt() throws Exception
+    {
+        String text = "some text $ with various é stuff in it";
+        assertEquals(text, TrustedLDAPAuthServiceImpl.decryptText(
+            TrustedLDAPAuthServiceImpl.encryptText(text, getContext()), getContext()));
     }
 }
