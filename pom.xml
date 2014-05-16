@@ -86,8 +86,8 @@
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/xwiki-authenticator-trusted-ldap.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/xwiki-authenticator-trusted-ldap.git</developerConnection>
-    <url>https://github.com/xwiki-contrib/xwiki-authenticator-trusted-ldap</url>
-    <tag>HEAD</tag>
+    <url>https://github.com/xwiki-contrib/xwiki-authenticator-trusted-ldap/tree/master/xwiki26</url>
+    <tag>xwiki26</tag>
   </scm>
   <distributionManagement>
     <repository>
