@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.novell.ldap.LDAPDN;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.plugin.ldap.XWikiLDAPConfig;
-import com.xpn.xwiki.plugin.ldap.XWikiLDAPConnection;
 import com.xwiki.authentication.Config;
 
 public class TrustedLDAPConfig extends Config
@@ -97,9 +99,8 @@ public class TrustedLDAPConfig extends Config
         String password = remoteUserLDAPConfiguration.get("password");
 
         String format = getLDAPBindDNFormat(remoteUserLDAPConfiguration, context);
-        
-        return MessageFormat.format(format, XWikiLDAPConnection.escapeLDAPDNValue(login),
-            XWikiLDAPConnection.escapeLDAPDNValue(password));
+
+        return MessageFormat.format(format, escapeLDAPDNValue(login), escapeLDAPDNValue(password));
     }
 
     public String getLDAPBindPassword(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
@@ -111,5 +112,19 @@ public class TrustedLDAPConfig extends Config
 
         return MessageFormat.format(remoteUser_bind_pass != null ? remoteUser_bind_pass : XWikiLDAPConfig.getInstance()
             .getLDAPBindPassword(context), login, password);
+    }
+
+    /**
+     * Fully escape DN value (the part after the =).
+     * <p>
+     * For example, for the dn value "Acme, Inc", the escapeLDAPDNValue method returns "Acme\, Inc".
+     * </p>
+     * 
+     * @param value the DN value to escape
+     * @return the escaped version o the DN value
+     */
+    public static String escapeLDAPDNValue(String value)
+    {
+        return StringUtils.isBlank(value) ? value : LDAPDN.escapeRDN("key=" + value).substring(4);
     }
 }

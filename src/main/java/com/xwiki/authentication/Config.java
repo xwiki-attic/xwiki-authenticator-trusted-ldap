@@ -27,9 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.xpn.xwiki.XWikiContext;
 
@@ -43,7 +43,7 @@ public class Config
     /**
      * LogFactory <code>LOGGER</code>.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
+    protected static final Log LOG = LogFactory.getLog(Config.class);
 
     private final String prefPrefix;
 
@@ -66,7 +66,7 @@ public class Config
         try {
             param = context.getWiki().getXWikiPreference(prefPrefix + "_" + name, context);
         } catch (Exception e) {
-            LOGGER.error("Faile to get preference [{}]", this.prefPrefix + "_" + name, e);
+            LOG.error("Faile to get preference [{" + this.prefPrefix + "_" + name + "}]", e);
         }
 
         if (StringUtils.isEmpty(param)) {
@@ -75,11 +75,11 @@ public class Config
             try {
                 param = context.getWiki().Param(confPrefix + "." + name);
             } catch (Exception e) {
-                LOGGER.error("Failed to get property [{}] from configuration file", this.confPrefix + "." + name, e);
+                LOG.error("Failed to get property [{" + this.confPrefix + "." + name + "}] from configuration file", e);
             }
         }
 
-        LOGGER.debug("Param [{}]: {}", name, param);
+        LOG.debug("Param [{" + name + "}]: {" + param + "}");
 
         return param;
     }
@@ -122,7 +122,7 @@ public class Config
 
                         mappings.put(forceLowerCaseKey ? key.toLowerCase() : key, value);
                     } else {
-                        LOGGER.warn("Error parsing [{}] attribute in xwiki.cfg: {}", name, fieldStr);
+                        LOG.warn("Error parsing [{" + name + "}] attribute in xwiki.cfg: {" + fieldStr + "}");
                     }
                 }
             }
@@ -148,7 +148,7 @@ public class Config
                     int splitIndex = mapping.indexOf('=');
 
                     if (splitIndex < 1) {
-                        LOGGER.error("Error parsing [{}] attribute: {}", name, mapping);
+                        LOG.error("Error parsing [{" + name + "}] attribute: {" + mapping + "}");
                     } else {
                         String leftProperty =
                             left ? mapping.substring(0, splitIndex) : mapping.substring(splitIndex + 1);
@@ -164,7 +164,7 @@ public class Config
 
                         rightCollection.add(rightProperty);
 
-                        LOGGER.debug("[{}] mapping found: {}", name, leftProperty + " " + rightCollection);
+                        LOG.debug("[{" + name + "}] mapping found: {" + leftProperty + " " + rightCollection + "}");
                     }
                 }
             }
