@@ -31,9 +31,9 @@
   </parent>
 
   <groupId>org.xwiki.contrib.authentication</groupId>
-  <artifactId>xwiki-authenticator-trusted-ldap</artifactId>
+  <artifactId>xwiki-authenticator-trusted-ldap-xwiki26</artifactId>
   <name>XWiki Authenticator Trusted LDAP</name>
-  <version>1.2-2.6-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   <description>Support JAAS remote user based SSO authentication and get informations from LDAP server</description>
   <properties>
     <!-- Too lazy to fix them right now. -->
