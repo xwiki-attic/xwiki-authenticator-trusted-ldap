@@ -1,5 +1,7 @@
 Support JAAS remote user based SSO authentication and get informations from LDAP server.
 
+Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
+
 # This authenticator execute the following process
 
 * get remote user from Portlet or Servlet request and retrieve informations from LDAP server
@@ -64,6 +66,10 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 * generic support of LDAP property in remoteUserMapping configuration
 
 # Changelog
+
+## 1.0.3
+
+AUTHTLDAP-2: Fixed a crash when the xwiki.authentication.encryptionKey key contains non ASCII characters.
 
 ## 1.0.1 and 1.0.2
 
