@@ -7,7 +7,8 @@ Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
 * get remote user from Portlet or Servlet request
   * extract the user uid from the domain
   * extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
-* if no remote user is provided it falback on standard LDAP authentication
+* if no remote user is provided but the standard XWiki login/pass form is used, the login is parsed as if it was a remote user and the password validated with the exacted uid on LDAP server corresponding to the extracted domain/server 
+* if this fail it falback on standard LDAP authentication
 
 If SSO fail, it tries standard LDAP authentication.
 
@@ -80,9 +81,14 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 
 # Changelog
 
+## 1.1
+
+* [AUTHTLDAP-3](http://jira.xwiki.org/browse/AUTHTLDAP-3): Add support for custom port
+* [AUTHTLDAP-4](http://jira.xwiki.org/browse/AUTHTLDAP-4): Make sure users from different servers but with same uid don't collide
+
 ## 1.0.3
 
-AUTHTLDAP-2: Fixed a crash when the xwiki.authentication.encryptionKey key contains non ASCII characters.
+* [AUTHTLDAP-2](http://jira.xwiki.org/browse/AUTHTLDAP-2): Fixed a crash when the xwiki.authentication.encryptionKey key contains non ASCII characters.
 
 ## 1.0.1 and 1.0.2
 
