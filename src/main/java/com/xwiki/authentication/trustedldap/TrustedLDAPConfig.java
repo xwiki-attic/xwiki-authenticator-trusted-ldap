@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.plugin.ldap.XWikiLDAPConfig;
 import com.xpn.xwiki.plugin.ldap.XWikiLDAPConnection;
@@ -74,6 +76,20 @@ public class TrustedLDAPConfig extends Config
         return ldapServer;
     }
 
+    public int getLDAPPort(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
+    {
+        int ldapPort = 389;
+
+        String ldapPortString = remoteUserLDAPConfiguration.get("ldap_port");
+        if (ldapPortString == null) {
+            ldapPort = XWikiLDAPConfig.getInstance().getLDAPPort(context);
+        } else {
+            NumberUtils.toInt(ldapPortString, 389);
+        }
+
+        return ldapPort;
+    }
+
     public String getLDAPBaseDN(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
     {
         String ldapBaseDN = remoteUserLDAPConfiguration.get("ldap_base_DN");
@@ -97,7 +113,7 @@ public class TrustedLDAPConfig extends Config
         String password = remoteUserLDAPConfiguration.get("password");
 
         String format = getLDAPBindDNFormat(remoteUserLDAPConfiguration, context);
-        
+
         return MessageFormat.format(format, XWikiLDAPConnection.escapeLDAPDNValue(login),
             XWikiLDAPConnection.escapeLDAPDNValue(password));
     }

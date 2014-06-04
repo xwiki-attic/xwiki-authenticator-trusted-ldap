@@ -120,10 +120,12 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
                 will(returnValue("login"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
-                will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
+                will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_port", getContext());
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext());
                 will(returnValue(null));
@@ -152,11 +154,13 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
                 will(returnValue("login"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
-                will(returnValue("ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
                 will(returnValue("doMain=my.domain.com|domain2=my.domain2.com"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_port", getContext());
+                will(returnValue("doMain=388|domain2=387"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_base_DN", getContext());
                 will(returnValue("dOmain=dc=my,dc=domain,dc=com|domain2=dc=my,dc=domain2,dc=com"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_DN", getContext());
@@ -170,6 +174,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
 
         Assert.assertEquals("user", ldapConfiguration.get("login"));
         Assert.assertEquals("my.domain.com", ldapConfiguration.get("ldap_server"));
+        Assert.assertEquals("388", ldapConfiguration.get("ldap_port"));
         Assert.assertEquals("dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password", ldapConfiguration.get("ldap_bind_pass"));
@@ -178,6 +183,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
 
         Assert.assertEquals("user", ldapConfiguration.get("login"));
         Assert.assertEquals("my.domain2.com", ldapConfiguration.get("ldap_server"));
+        Assert.assertEquals("387", ldapConfiguration.get("ldap_port"));
         Assert.assertEquals("dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password2", ldapConfiguration.get("ldap_bind_pass"));

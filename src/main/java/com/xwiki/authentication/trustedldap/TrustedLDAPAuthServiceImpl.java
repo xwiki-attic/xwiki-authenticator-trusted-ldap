@@ -329,7 +329,7 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         XWikiLDAPConfig config = XWikiLDAPConfig.getInstance();
 
         // open LDAP
-        int ldapPort = config.getLDAPPort(context);
+        int ldapPort = getConfig().getLDAPPort(remoteUserLDAPConfiguration, context);
         String ldapHost = getConfig().getLDAPServer(remoteUserLDAPConfiguration, context);
 
         // allow to use the given user and password also as the LDAP bind user and password

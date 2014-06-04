@@ -5,8 +5,8 @@ Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
 # This authenticator execute the following process
 
 * get remote user from Portlet or Servlet request
-⋅⋅* extract the user uid from the domain
-⋅⋅* extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
+  * extract the user uid from the domain
+  * extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
 * if no remote user is provided it falback on standard LDAP authentication
 
 If SSO fail, it tries standard LDAP authentication.
@@ -25,6 +25,7 @@ If SSO fail, it tries standard LDAP authentication.
     #-#   * login: the login of the user
     #-#   * password: the password of the user
     #-#   * ldap_server: the host of the server, see xwiki.authentication.ldap.server for more details
+    #-#   * ldap_port: the port of the server, see xwiki.authentication.ldap.port for more details
     #-#   * ldap_base_DN: the base DN used to search in the LDAP server, see xwiki.authentication.ldap.base_DN for more details
     #-#   * ldap_bind_DN: the bind DN used to access the LDAP server, see xwiki.authentication.ldap.bind_DN for more details
     #-#   * ldap_bind_pass: the bind password used to access the LDAP server, see xwiki.authentication.ldap.bind_pass for more details
@@ -32,12 +33,13 @@ If SSO fail, it tries standard LDAP authentication.
     #-# The following indicate that the first regexp group is associated to the login:
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
     #-# The following indicate that the second regexp group is associated to everything else (the mapping is then used to indicate which is the vallue for each property):
-    # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
+    # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
     
-    #-# Indicate how to convert each found property
+    #-# Indicate how to convert each found property. If a property is not set, the standard LDAP authenticator setup is used.
     #-# 
     #-# Here is an example mapping each of the domains MYDOMAIN and MYDOMAIN2 to specific properties:
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_server=MYDOMAIN=my.domain.com|MYDOMAIN2=my.domain2.com
+    # xwiki.authentication.trustedldap.remoteUserMapping.ldap_port=MYDOMAIN=388|MYDOMAIN2=387
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_base_DN=MYDOMAIN=dc=my,dc=domain,dc=com|MYDOMAIN2=dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=cn=bind,dc=my,dc=domain,dc=com|MYDOMAIN2=cn=bind,dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_pass=MYDOMAIN=password|MYDOMAIN2=password2
