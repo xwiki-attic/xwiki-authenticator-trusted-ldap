@@ -22,7 +22,12 @@ If SSO fail, it tries standard LDAP authentication.
     
     #-# Indicate which of the regexp group correspond to which LDAP properties.
     #-# The following LDAP properties are supported:
-    #-#   login, password, ldap_server, ldap_base_DN, ldap_bind_DN, ldap_bind_pass
+    #-#   * login: the login of the user
+    #-#   * password: the password of the user
+    #-#   * ldap_server: the host of the server, see xwiki.authentication.ldap.server for more details
+    #-#   * ldap_base_DN: the base DN used to search in the LDAP server, see xwiki.authentication.ldap.base_DN for more details
+    #-#   * ldap_bind_DN: the bind DN used to access the LDAP server, see xwiki.authentication.ldap.bind_DN for more details
+    #-#   * ldap_bind_pass: the bind password used to access the LDAP server, see xwiki.authentication.ldap.bind_pass for more details
     #-# 
     #-# The following indicate that the first regexp group is associated to the login:
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
