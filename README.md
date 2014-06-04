@@ -15,19 +15,22 @@ If SSO fail, it tries standard LDAP authentication.
 
 ## xwiki.cfg file
 
-    #-# A Java regexp used to parse the remote user provided by JAAS
-    #-# The following matches re users like UID@DOMAIN:
+    #-# A Java regexp used to parse the remote user provided by JAAS.
+    #-# 
+    #-# The following matches the users like UID@DOMAIN:
     # xwiki.authentication.trustedldap.remoteUserParser=(.+)@(.+)
     
-    #-# Indicate which of the regexp group correspond to which LDAP properties
+    #-# Indicate which of the regexp group correspond to which LDAP properties.
     #-# The following LDAP properties are supported:
     #-#   login, password, ldap_server, ldap_base_DN, ldap_bind_DN, ldap_bind_pass
-    #-# The following indicate that the first regex group is associated to the login:
+    #-# 
+    #-# The following indicate that the first regexp group is associated to the login:
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
-    #-# The following indicate that the second regex group is associated everything else (the mapping is then used indicate which is the fallue for each property):
+    #-# The following indicate that the second regexp group is associated to everything else (the mapping is then used to indicate which is the vallue for each property):
     # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
     
     #-# Indicate how to convert each found property
+    #-# 
     #-# Here is an example mapping each of the domains MYDOMAIN and MYDOMAIN2 to specific properties:
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_server=MYDOMAIN=my.domain.com|MYDOMAIN2=my.domain2.com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_base_DN=MYDOMAIN=dc=my,dc=domain,dc=com|MYDOMAIN2=dc=my,dc=domain2,dc=com
