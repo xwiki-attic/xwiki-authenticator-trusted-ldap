@@ -429,7 +429,8 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         LDAPProfileXClass ldapProfileClass = new LDAPProfileXClass(context);
 
-        XWikiDocument userProfile = ldapUtils.getUserProfileByUid(validXWikiUserName, ldapUid, context);
+        // Get the profile using the remote ID instead of the uid to avoid collisions
+        XWikiDocument userProfile = ldapUtils.getUserProfileByUid(validXWikiUserName, ssoRemoteUser, context);
 
         // get DN from existing XWiki user
         String ldapDn = ldapProfileClass.getDn(userProfile);
