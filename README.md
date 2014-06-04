@@ -5,8 +5,8 @@ Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
 # This authenticator execute the following process
 
 * get remote user from Portlet or Servlet request
-** extract the user uid from the domain
-** extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
+⋅⋅* extract the user uid from the domain
+⋅⋅* extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
 * if no remote user is provided it falback on standard LDAP authentication
 
 If SSO fail, it tries standard LDAP authentication.
