@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.plugin.ldap.XWikiLDAPConfig;
@@ -43,7 +45,7 @@ public class TrustedLDAPConfig extends Config
         super(PREF_KEY, CONF_KEY);
     }
 
-    public Pattern getRemoteUserParser(XWikiContext context)
+    public Pattern getRemoteUserPattern(XWikiContext context)
     {
         String param = getParam("remoteUserParser", null, context);
 
@@ -127,5 +129,19 @@ public class TrustedLDAPConfig extends Config
 
         return MessageFormat.format(remoteUser_bind_pass != null ? remoteUser_bind_pass : XWikiLDAPConfig.getInstance()
             .getLDAPBindPassword(context), login, password);
+    }
+
+    public String getUserPageName(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
+    {
+        String userPageName = getParam("userPageName", "${login}", context);
+
+        String pageName = StrSubstitutor.replace(userPageName, remoteUserLDAPConfiguration);
+
+        // Protected from characters not well supported in user page name depending on the version of XWiki
+        pageName = StringUtils.remove(pageName, '.');
+        pageName = StringUtils.remove(pageName, ' ');
+        pageName = StringUtils.remove(pageName, '/');
+
+        return pageName;
     }
 }

@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.xpn.xwiki.XWikiContext;
 
 /**
- * Get PUMA authenticator configuration.
+ * Get authenticator configuration.
  * 
  * @version $Id$
  */

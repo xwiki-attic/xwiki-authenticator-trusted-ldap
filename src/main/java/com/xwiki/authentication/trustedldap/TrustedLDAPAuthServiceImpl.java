@@ -283,7 +283,7 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         ldapConfiguration.put("login", ssoRemoteUser);
 
-        Pattern remoteUserParser = getConfig().getRemoteUserParser(context);
+        Pattern remoteUserParser = getConfig().getRemoteUserPattern(context);
 
         LOGGER.debug("remoteUserParser: {}", remoteUserParser);
 
@@ -395,7 +395,7 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         }
 
         String ldapUid = remoteUserLDAPConfiguration.get("login");
-        String validXWikiUserName = ldapUid.replace(".", "");
+        String validXWikiUserName = getConfig().getUserPageName(remoteUserLDAPConfiguration, context);
 
         LOGGER.debug("ldapUid: {}", ldapUid);
         LOGGER.debug("validXWikiUserName: {}", validXWikiUserName);
@@ -494,13 +494,14 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         boolean isNewUser = userProfile.isNew();
 
-        syncUser(userProfile, searchAttributes, ldapDn, ldapUid, ldapUtils, context);
+        // Store the remote user instead of the uid to avoid collisions
+        syncUser(userProfile, searchAttributes, ldapDn, ssoRemoteUser, ldapUtils, context);
 
         // from now on we can enter the application
         if (local) {
             principal = new SimplePrincipal(userProfile.getFullName());
         } else {
-            principal = new SimplePrincipal(context.getDatabase() + ":" + userProfile.getFullName());
+            principal = new SimplePrincipal(userProfile.getPrefixedFullName());
         }
 
         // ////////////////////////////////////////////////////////////////////

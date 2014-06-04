@@ -22,8 +22,8 @@ If SSO fail, it tries standard LDAP authentication.
     # xwiki.authentication.trustedldap.remoteUserParser=(.+)@(.+)
     
     #-# Indicate which of the regexp group correspond to which LDAP properties.
-    #-# The following LDAP properties are supported:
-    #-#   * login: the login of the user
+    #-# The following LDAP properties are reserved (any other property can be defined as variable for xwiki.authentication.trustedldap.userPageName):
+    #-#   * login: the uid of the user
     #-#   * password: the password of the user
     #-#   * ldap_server: the host of the server, see xwiki.authentication.ldap.server for more details
     #-#   * ldap_port: the port of the server, see xwiki.authentication.ldap.port for more details
@@ -34,7 +34,7 @@ If SSO fail, it tries standard LDAP authentication.
     #-# The following indicate that the first regexp group is associated to the login:
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
     #-# The following indicate that the second regexp group is associated to everything else (the mapping is then used to indicate which is the vallue for each property):
-    # xwiki.authentication.trustedldap.remoteUserMapping.2=ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
+    # xwiki.authentication.trustedldap.remoteUserMapping.2=domain,ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
     
     #-# Indicate how to convert each found property. If a property is not set, the standard LDAP authenticator setup is used.
     #-# 
@@ -44,6 +44,15 @@ If SSO fail, it tries standard LDAP authentication.
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_base_DN=MYDOMAIN=dc=my,dc=domain,dc=com|MYDOMAIN2=dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=cn=bind,dc=my,dc=domain,dc=com|MYDOMAIN2=cn=bind,dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_pass=MYDOMAIN=password|MYDOMAIN2=password2
+    
+    #-# The XWiki page name pattern.
+    #-# Can use xwiki.authentication.trustedldap.remoteUserParser group or a properties defined in xwiki.authentication.trustedldap.remoteUserMapping.
+    #-# The supported syntax is org.apache.commons.lang3.text.StrSubstitutor one,
+    #-# see http://commons.apache.org/proper/commons-lang/javadocs/api-3.0/org/apache/commons/lang3/text/StrSubstitutor.html for more details.
+    #-# The default is "${login}".
+    #-# 
+    #-# In this example the XWiki user profile page name will be of the form MYDOMAIN-myuid
+    # xwiki.authentication.trustedldap.userPageName=${domain}-${login}
     
     #-# For other LDAP related configuration refer to standard LDAP authenticator documentation
 
