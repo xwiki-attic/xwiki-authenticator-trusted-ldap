@@ -7,7 +7,7 @@ Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
 1. get remote user from the request
   1. extract the user uid from the domain
   2. extract the user domain/server id from the remote user and get from the configuration the LDAP configuration to use for each LDAP domain/server
-2. if no remote user is provided but the standard XWiki login/pass form is used, 1. is done but this time with the passed login instead of the remote user and the password is validated
+2. if no remote user is provided but the standard XWiki login/pass form is used, *1.* is done but this time with the passed login instead of the remote user and the password is validated
 3. if all this fail it falback on standard LDAP authentication
 
 If SSO fail, it tries standard LDAP authentication.
