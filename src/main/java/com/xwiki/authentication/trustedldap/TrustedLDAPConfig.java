@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.plugin.ldap.XWikiLDAPConfig;
@@ -38,6 +40,11 @@ import com.xwiki.authentication.Config;
 
 public class TrustedLDAPConfig extends Config
 {
+    /**
+     * LogFactory <code>LOGGER</code>.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
+
     protected static final String PREF_KEY = "trustedldap";
 
     protected static final String CONF_KEY = "xwiki.authentication.trustedldap";
@@ -144,6 +151,8 @@ public class TrustedLDAPConfig extends Config
         pageName = StringUtils.remove(pageName, ' ');
         pageName = StringUtils.remove(pageName, '/');
 
+        LOGGER.debug("UserPageName: {}", pageName);
+
         return pageName;
     }
 
@@ -155,6 +164,8 @@ public class TrustedLDAPConfig extends Config
         for (String uid : list) {
             set.add(StrSubstitutor.replace(uid, remoteUserLDAPConfiguration));
         }
+
+        LOGGER.debug("TestLoginFor: {}", set);
 
         return set;
     }
