@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -99,6 +100,23 @@ public class Config
         }
 
         return list;
+    }
+
+    public Set<String> getSetParam(String name, char separator, Set<String> def, XWikiContext context)
+    {
+        Set<String> set = def;
+
+        String str = getParam(name, null, context);
+
+        if (str != null) {
+            if (!StringUtils.isEmpty(str)) {
+                set = new HashSet<String>(Arrays.asList(StringUtils.split(str, separator)));
+            } else {
+                set = Collections.emptySet();
+            }
+        }
+
+        return set;
     }
 
     public Map<String, String> getMapParam(String name, char separator, Map<String, String> def,

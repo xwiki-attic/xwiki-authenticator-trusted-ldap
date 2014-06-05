@@ -45,6 +45,7 @@ If SSO fail, it tries standard LDAP authentication.
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=cn=bind,dc=my,dc=domain,dc=com|MYDOMAIN2=cn=bind,dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_pass=MYDOMAIN=password|MYDOMAIN2=password2
     
+    #-# [Since 1.1]
     #-# The XWiki page name pattern.
     #-# Can use xwiki.authentication.trustedldap.remoteUserParser group or a properties defined in xwiki.authentication.trustedldap.remoteUserMapping.
     #-# The supported syntax is org.apache.commons.lang3.text.StrSubstitutor one,
@@ -53,6 +54,14 @@ If SSO fail, it tries standard LDAP authentication.
     #-# 
     #-# In this example the XWiki user profile page name will be of the form MYDOMAIN-myuid
     # xwiki.authentication.trustedldap.userPageName=${domain}-${login}
+    
+    #-# [Since 1.1]
+    #-# The list of uids for which login should also be searched as uid.
+    #-# Use this property as retro-ompatibility to support users created with authenticator older than 1.1 version.
+    #-# An alternative is to change the uid in all the existing users to make sure it contains complete remote user instead.
+    #-# 
+    #-# In this example the authenticator will try to find existing users from domain MYDOMAIN with only the login as uid when it can't find one with the comple remote user:
+    # xwiki.authentication.trustedldap.testLoginFor=${login}@MYDOMAIN,${login}@ANOTHERDOMAIN
     
     #-# For other LDAP related configuration refer to standard LDAP authenticator documentation
 

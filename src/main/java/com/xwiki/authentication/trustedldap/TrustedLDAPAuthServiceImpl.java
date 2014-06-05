@@ -430,7 +430,18 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         LDAPProfileXClass ldapProfileClass = new LDAPProfileXClass(context);
 
         // Get the profile using the remote ID instead of the uid to avoid collisions
-        XWikiDocument userProfile = ldapUtils.getUserProfileByUid(validXWikiUserName, ssoRemoteUser, context);
+        XWikiDocument userProfile = ldapProfileClass.searchDocumentByUid(ssoRemoteUser);
+        if (userProfile == null) {
+            // Now a bit or retro-compatibility
+            if (getConfig().getTestLoginFor(remoteUserLDAPConfiguration, context).contains(ssoRemoteUser)) {
+                userProfile = ldapProfileClass.searchDocumentByUid(ldapUid);
+            }
+        }
+
+        if (userProfile == null) {
+            // Lets find a new page then
+            userProfile = ldapUtils.getUserProfileByUid(validXWikiUserName, ssoRemoteUser, context);
+        }
 
         // get DN from existing XWiki user
         String ldapDn = ldapProfileClass.getDn(userProfile);
@@ -457,7 +468,7 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         if (ldapDn == null) {
             throw new XWikiException(XWikiException.MODULE_XWIKI_USER, XWikiException.ERROR_XWIKI_USER_INIT,
-                "Can't find LDAP user DN for [" + ldapUid + "]");
+                "Can't find LDAP user DN for [" + ssoRemoteUser + "]");
         }
 
         // if using form user/password, validate it

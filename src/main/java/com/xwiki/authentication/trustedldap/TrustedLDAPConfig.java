@@ -21,8 +21,10 @@ package com.xwiki.authentication.trustedldap;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -143,5 +145,17 @@ public class TrustedLDAPConfig extends Config
         pageName = StringUtils.remove(pageName, '/');
 
         return pageName;
+    }
+
+    public Set<String> getTestLoginFor(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
+    {
+        List<String> list = getListParam("testLoginFor", ',', Collections.<String> emptyList(), context);
+
+        Set<String> set = new HashSet<String>(list.size());
+        for (String uid : list) {
+            set.add(StrSubstitutor.replace(uid, remoteUserLDAPConfiguration));
+        }
+
+        return set;
     }
 }
