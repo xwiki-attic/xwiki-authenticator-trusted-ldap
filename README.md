@@ -57,7 +57,7 @@ If SSO fail, it tries standard LDAP authentication.
     
     #-# [Since 1.1]
     #-# The list of uids for which login should also be searched as uid.
-    #-# Use this property as retro-ompatibility to support users created with authenticator older than 1.1 version.
+    #-# You can use this property as retro-ompatibility to support users created with authenticator older than 1.1 version.
     #-# An alternative is to change the uid in all the existing users to make sure it contains complete remote user instead.
     #-# 
     #-# In this example the authenticator will try to find existing users from domain MYDOMAIN with only the login as uid when it can't find one with the comple remote user:
@@ -103,6 +103,12 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 
 * [AUTHTLDAP-3](http://jira.xwiki.org/browse/AUTHTLDAP-3): Add support for custom port
 * [AUTHTLDAP-4](http://jira.xwiki.org/browse/AUTHTLDAP-4): Make sure users from different servers but with same uid don't collide
+
+### Upgrade from pre 1.x
+
+The uid stored in XWiki user profile changed which mean by default the authenticator won't find old pages. You can either:
+* use xwiki.authentication.trustedldap.testLoginFor to support properly old pages
+* write a script to change all existing uid stored in wiki pages to full remote user instead of LDAP user id
 
 ## 1.0.3
 
