@@ -64,6 +64,7 @@ public class Config
     public String getParam(String name, String def, XWikiContext context)
     {
         String param = null;
+
         try {
             param = context.getWiki().getXWikiPreference(prefPrefix + "_" + name, context);
         } catch (Exception e) {
@@ -71,13 +72,15 @@ public class Config
         }
 
         if (StringUtils.isEmpty(param)) {
-            param = def;
-
             try {
                 param = context.getWiki().Param(confPrefix + "." + name);
             } catch (Exception e) {
-                LOGGER.error("Failed to get property [{}] from configuration file", this.confPrefix + "." + name, e);
+                // ignore
             }
+        }
+
+        if (param == null) {
+            param = def;
         }
 
         LOGGER.debug("Param [{}]: {}", name, param);
