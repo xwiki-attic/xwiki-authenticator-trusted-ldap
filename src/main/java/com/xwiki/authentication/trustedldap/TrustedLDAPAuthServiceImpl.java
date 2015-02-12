@@ -26,6 +26,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -450,8 +451,7 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         List<XWikiLDAPSearchAttribute> searchAttributes = null;
 
-        // if we still don't have a dn, search for it. Also get the attributes, we might need
-        // them
+        // Get the attributes, we might need them
         if (ldapDn == null) {
             searchAttributes = ldapUtils.searchUserAttributesByUid(ldapUid, ldapUtils.getAttributeNameTable(context));
 
@@ -528,5 +528,28 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         LOGGER.debug("Principal=" + principal);
 
         return principal;
+    }
+
+    /**
+     * Override standard {@link #syncGroupsMembership(String, String, boolean, XWikiLDAPUtils, XWikiContext)} to use
+     * dynamic configuration.
+     */
+    @Override
+    protected void syncGroupsMembership(String xwikiUserName, String ldapDn, boolean createuser,
+        XWikiLDAPUtils ldapUtils, XWikiContext context) throws XWikiException
+    {
+        // got valid group mappings
+        Map<String, Set<String>> groupMappings = getConfig().getGroupMappings(context);
+
+        // update group membership, join and remove from given groups
+        // sync group membership for this user
+        if (groupMappings.size() > 0) {
+            // flag if always sync or just on create of the user
+            String syncmode = getConfig().getParam("ldap_mode_group_sync", "always", context);
+
+            if (!syncmode.equalsIgnoreCase("create") || createuser) {
+                syncGroupsMembership(xwikiUserName, ldapDn, groupMappings, ldapUtils, context);
+            }
+        }
     }
 }

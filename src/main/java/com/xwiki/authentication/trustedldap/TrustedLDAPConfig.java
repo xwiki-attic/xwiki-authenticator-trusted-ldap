@@ -21,6 +21,7 @@ package com.xwiki.authentication.trustedldap;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -168,5 +169,78 @@ public class TrustedLDAPConfig extends Config
         LOGGER.debug("TestLoginFor: {}", set);
 
         return set;
+    }
+
+    /**
+     * Get mapping between XWiki groups names and LDAP groups names.
+     * 
+     * @param context the XWiki context.
+     * @return the mapping between XWiki users and LDAP users. The key is the XWiki group, and the value is the list of
+     *         mapped LDAP groups.
+     * @since 1.1
+     */
+    public Map<String, Set<String>> getGroupMappings(XWikiContext context)
+    {
+        Map<String, Set<String>> groupMappings = new HashMap<String, Set<String>>();
+
+        String param = getParam("ldap_group_mapping", "", context);
+
+        if (param.trim().length() > 0) {
+            char[] buffer = param.trim().toCharArray();
+            boolean escaped = false;
+            StringBuilder mapping = new StringBuilder(param.length());
+            for (int i = 0; i < buffer.length; ++i) {
+                char c = buffer[i];
+
+                if (escaped) {
+                    mapping.append(c);
+                    escaped = false;
+                } else {
+                    if (c == '\\') {
+                        escaped = true;
+                    } else if (c == '|') {
+                        addGroupMapping(mapping.toString(), groupMappings);
+                        mapping.setLength(0);
+                    } else {
+                        mapping.append(c);
+                    }
+                }
+            }
+
+            if (mapping.length() > 0) {
+                addGroupMapping(mapping.toString(), groupMappings);
+            }
+        }
+
+        return groupMappings;
+    }
+
+    /**
+     * @param mapping the mapping to parse
+     * @param groupMappings the map to add parsed group mapping to
+     */
+    private void addGroupMapping(String mapping, Map<String, Set<String>> groupMappings)
+    {
+        int splitIndex = mapping.indexOf('=');
+
+        if (splitIndex < 1) {
+            LOGGER.error("Error parsing ldap_group_mapping attribute [{}]", mapping);
+        } else {
+            String xwikigroup = mapping.substring(0, splitIndex);
+            String ldapgroup = mapping.substring(splitIndex + 1);
+
+            Set<String> ldapGroups = groupMappings.get(xwikigroup);
+
+            if (ldapGroups == null) {
+                ldapGroups = new HashSet<String>();
+                groupMappings.put(xwikigroup, ldapGroups);
+            }
+
+            ldapGroups.add(ldapgroup);
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Groupmapping found [{}] [{}]", xwikigroup, ldapGroups);
+            }
+        }
     }
 }
