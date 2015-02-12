@@ -179,11 +179,15 @@ public class TrustedLDAPConfig extends Config
      *         mapped LDAP groups.
      * @since 1.1
      */
-    public Map<String, Set<String>> getGroupMappings(XWikiContext context)
+    public Map<String, Set<String>> getGroupMappings(Map<String, String> remoteUserLDAPConfiguration, XWikiContext context)
     {
-        Map<String, Set<String>> groupMappings = new HashMap<String, Set<String>>();
+        String param = remoteUserLDAPConfiguration.get("ldap_group_mapping");
 
-        String param = getParam("ldap_group_mapping", "", context);
+        if (param == null) {
+            return XWikiLDAPConfig.getInstance().getGroupMappings(context);
+        }
+
+        Map<String, Set<String>> groupMappings = new HashMap<String, Set<String>>();
 
         if (param.trim().length() > 0) {
             char[] buffer = param.trim().toCharArray();

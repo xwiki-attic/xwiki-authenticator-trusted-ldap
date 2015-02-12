@@ -521,6 +521,20 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
 
         try {
             syncGroupsMembership(userProfile.getFullName(), ldapDn, isNewUser, ldapUtils, context);
+
+            // got valid group mappings
+            Map<String, Set<String>> groupMappings = getConfig().getGroupMappings(remoteUserLDAPConfiguration, context);
+
+            // update group membership, join and remove from given groups
+            // sync group membership for this user
+            if (groupMappings.size() > 0) {
+                // flag if always sync or just on create of the user
+                String syncmode = getConfig().getParam("ldap_mode_group_sync", "always", context);
+
+                if (!syncmode.equalsIgnoreCase("create") || isNewUser) {
+                    syncGroupsMembership(userProfile.getFullName(), ldapDn, groupMappings, ldapUtils, context);
+                }
+            }
         } catch (XWikiException e) {
             LOGGER.error("Failed to synchronise user's groups membership", e);
         }
@@ -528,28 +542,5 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         LOGGER.debug("Principal=" + principal);
 
         return principal;
-    }
-
-    /**
-     * Override standard {@link #syncGroupsMembership(String, String, boolean, XWikiLDAPUtils, XWikiContext)} to use
-     * dynamic configuration.
-     */
-    @Override
-    protected void syncGroupsMembership(String xwikiUserName, String ldapDn, boolean createuser,
-        XWikiLDAPUtils ldapUtils, XWikiContext context) throws XWikiException
-    {
-        // got valid group mappings
-        Map<String, Set<String>> groupMappings = getConfig().getGroupMappings(context);
-
-        // update group membership, join and remove from given groups
-        // sync group membership for this user
-        if (groupMappings.size() > 0) {
-            // flag if always sync or just on create of the user
-            String syncmode = getConfig().getParam("ldap_mode_group_sync", "always", context);
-
-            if (!syncmode.equalsIgnoreCase("create") || createuser) {
-                syncGroupsMembership(xwikiUserName, ldapDn, groupMappings, ldapUtils, context);
-            }
-        }
     }
 }

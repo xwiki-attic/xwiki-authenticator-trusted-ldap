@@ -44,7 +44,8 @@ If SSO fail, it tries standard LDAP authentication.
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_base_DN=MYDOMAIN=dc=my,dc=domain,dc=com|MYDOMAIN2=dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=cn=bind,dc=my,dc=domain,dc=com|MYDOMAIN2=cn=bind,dc=my,dc=domain2,dc=com
     # xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_pass=MYDOMAIN=password|MYDOMAIN2=password2
-    
+    # xwiki.authentication.trustedldap.remoteUserMapping.ldap_group_mapping=MYDOMAIN=XWiki.Admin=cn=admin,dc=my,dc=domain,dc=com\|XWiki.LDAPUsers=ou=groups,o=domain,c=com|MYDOMAIN2=XWiki.Admin=cn=admin,dc=my,dc=domain2,dc=com\|XWiki.LDAPUsers=ou=groups,o=domain2,c=com
+
     #-# [Since 1.1]
     #-# The XWiki page name pattern.
     #-# Can use xwiki.authentication.trustedldap.remoteUserParser group or a properties defined in xwiki.authentication.trustedldap.remoteUserMapping.
@@ -98,6 +99,10 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 * generic support of LDAP property in remoteUserMapping configuration
 
 # Changelog
+
+## 1.2
+
+* [AUTHTLDAP-5](http://jira.xwiki.org/browse/AUTHTLDAP-5): Impossible to setup group synchronization per domain
 
 ## 1.1
 
