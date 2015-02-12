@@ -520,8 +520,6 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
         // ////////////////////////////////////////////////////////////////////
 
         try {
-            syncGroupsMembership(userProfile.getFullName(), ldapDn, isNewUser, ldapUtils, context);
-
             // got valid group mappings
             Map<String, Set<String>> groupMappings = getConfig().getGroupMappings(remoteUserLDAPConfiguration, context);
 
