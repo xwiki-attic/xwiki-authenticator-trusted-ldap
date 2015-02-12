@@ -30,11 +30,12 @@ If SSO fail, it tries standard LDAP authentication.
     #-#   * ldap_base_DN: the base DN used to search in the LDAP server, see xwiki.authentication.ldap.base_DN for more details
     #-#   * ldap_bind_DN: the bind DN used to access the LDAP server, see xwiki.authentication.ldap.bind_DN for more details
     #-#   * ldap_bind_pass: the bind password used to access the LDAP server, see xwiki.authentication.ldap.bind_pass for more details
+    #-#   * [since 1.2] ldap_group_mapping: Maps XWiki groups to LDAP groups, separator is "|", see xwiki.authentication.ldap.group_mapping for more details
     #-# 
     #-# The following indicate that the first regexp group is associated to the login:
     # xwiki.authentication.trustedldap.remoteUserMapping.1=login
     #-# The following indicate that the second regexp group is associated to everything else (the mapping is then used to indicate which is the vallue for each property):
-    # xwiki.authentication.trustedldap.remoteUserMapping.2=domain,ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass
+    # xwiki.authentication.trustedldap.remoteUserMapping.2=domain,ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass,ldap_group_mapping
     
     #-# Indicate how to convert each found property. If a property is not set, the standard LDAP authenticator setup is used.
     #-# 
