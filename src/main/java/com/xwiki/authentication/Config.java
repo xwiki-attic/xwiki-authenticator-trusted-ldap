@@ -19,6 +19,7 @@
  */
 package com.xwiki.authentication;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class Config
 
         if (str != null) {
             if (!StringUtils.isEmpty(str)) {
-                list = Arrays.asList(StringUtils.split(str, separator));
+                list = splitParam(str, separator);
             } else {
                 list = Collections.emptyList();
             }
@@ -192,5 +193,33 @@ public class Config
         }
 
         return oneToMany;
+    }
+
+    private List<String> splitParam(String text, char delimiter) {
+        List<String> tokens = new ArrayList<String>();
+        boolean escaped = false;
+        StringBuilder sb = new StringBuilder();
+
+        for (char ch : text.toCharArray()) {
+            if (escaped) {
+                sb.append(ch);
+                escaped = false;
+            } else if (ch == delimiter) {
+                if (sb.length() > 0) {
+                    tokens.add(sb.toString());
+                    sb.delete(0, sb.length());
+                }
+            } else if (ch == '\\') {
+                escaped = true;
+            } else {
+                sb.append(ch);
+            }
+        }
+
+        if (sb.length() > 0) {
+            tokens.add(sb.toString());
+        }
+
+        return tokens;
     }
 }
