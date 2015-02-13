@@ -104,6 +104,7 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 ## 1.2
 
 * [AUTHTLDAP-5](http://jira.xwiki.org/browse/AUTHTLDAP-5): Impossible to setup group synchronization per domain
+* [AUTHTLDAP-6](http://jira.xwiki.org/browse/AUTHTLDAP-6): Wrong handling of default values 
 
 ## 1.1
 
