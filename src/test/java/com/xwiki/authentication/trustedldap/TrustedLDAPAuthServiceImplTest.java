@@ -120,7 +120,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
                 will(returnValue("login"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
-                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass,ldap_group_mapping"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
@@ -133,6 +133,8 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext());
                 will(returnValue(null));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_group_mapping", getContext());
+                will(returnValue(null));
             }
         });
 
@@ -141,6 +143,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         Assert.assertEquals("remote", ldapConfiguration.get("login"));
         Assert.assertEquals("user", ldapConfiguration.get("ldap_server"));
         Assert.assertEquals("user", ldapConfiguration.get("ldap_base_DN"));
+        Assert.assertEquals("user", ldapConfiguration.get("ldap_group_mapping"));
     }
 
     @Test
@@ -154,7 +157,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.1", getContext());
                 will(returnValue("login"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.2", getContext());
-                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass"));
+                will(returnValue("ldap_server,ldap_port,ldap_base_DN,ldap_bind_DN,ldap_bind_pass,ldap_group_mapping"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.login", getContext());
                 will(returnValue(null));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_server", getContext());
@@ -167,6 +170,8 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
                 will(returnValue("doMain=cn=bind,dc=my,dc=domain,dc=com|domain2=cn=bind,dc=my,dc=domain2,dc=com"));
                 allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_bind_pass", getContext());
                 will(returnValue("doMain=password|domain2=password2"));
+                allowing(xwikiMock).getXWikiPreference("trustedldap_remoteUserMapping.ldap_group_mapping", getContext());
+                will(returnValue("doMain=xgroup11=lgroup11\\|xgroup12=lgroup12|domain2=xgroup21=lgroup21\\|xgroup22=lgroup22"));
             }
         });
 
@@ -178,6 +183,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         Assert.assertEquals("dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password", ldapConfiguration.get("ldap_bind_pass"));
+        Assert.assertEquals("xgroup11=lgroup11|xgroup12=lgroup12", ldapConfiguration.get("ldap_group_mapping"));
 
         ldapConfiguration = this.authenticator.parseRemoteUser("user@domain2", getContext());
 
@@ -187,6 +193,7 @@ public class TrustedLDAPAuthServiceImplTest extends AbstractBridgedComponentTest
         Assert.assertEquals("dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_base_DN"));
         Assert.assertEquals("cn=bind,dc=my,dc=domain2,dc=com", ldapConfiguration.get("ldap_bind_DN"));
         Assert.assertEquals("password2", ldapConfiguration.get("ldap_bind_pass"));
+        Assert.assertEquals("xgroup21=lgroup21|xgroup22=lgroup22", ldapConfiguration.get("ldap_group_mapping"));
     }
 
     @Test
