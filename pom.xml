@@ -33,7 +33,7 @@
   <groupId>org.xwiki.contrib.authentication</groupId>
   <artifactId>xwiki-authenticator-trusted-ldap</artifactId>
   <name>XWiki Authenticator Trusted LDAP</name>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
   <description>Support JAAS remote user based SSO authentication and get informations from LDAP server</description>
   <properties>
     <!-- Too lazy to fix them right now. -->
@@ -86,7 +86,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/xwiki-authenticator-trusted-ldap.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/xwiki-authenticator-trusted-ldap.git</developerConnection>
     <url>https://github.com/xwiki-contrib/xwiki-authenticator-trusted-ldap</url>
-    <tag>HEAD</tag>
+    <tag>xwiki-authenticator-trusted-ldap-1.3</tag>
   </scm>
   <distributionManagement>
     <repository>
