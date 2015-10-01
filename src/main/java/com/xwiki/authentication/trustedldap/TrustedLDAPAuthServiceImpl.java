@@ -444,24 +444,23 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
             userProfile = ldapUtils.getUserProfileByUid(validXWikiUserName, ssoRemoteUser, context);
         }
 
+        // ////////////////////////////////////////////////////////////////////
+        // search for LDAP dn
+        // ////////////////////////////////////////////////////////////////////
+
         // get DN from existing XWiki user
-        String ldapDn = ldapProfileClass.getDn(userProfile);
-
-        LOGGER.debug("Found user dn with the user object: {}", ldapDn);
-
+        String ldapDn = null;
         List<XWikiLDAPSearchAttribute> searchAttributes = null;
 
         // Get the attributes, we might need them
-        if (ldapDn == null) {
-            searchAttributes = ldapUtils.searchUserAttributesByUid(ldapUid, ldapUtils.getAttributeNameTable(context));
+        searchAttributes = ldapUtils.searchUserAttributesByUid(ldapUid, ldapUtils.getAttributeNameTable(context));
 
-            if (searchAttributes != null) {
-                for (XWikiLDAPSearchAttribute searchAttribute : searchAttributes) {
-                    if ("dn".equals(searchAttribute.name)) {
-                        ldapDn = searchAttribute.value;
+        if (searchAttributes != null) {
+            for (XWikiLDAPSearchAttribute searchAttribute : searchAttributes) {
+                if ("dn".equals(searchAttribute.name)) {
+                    ldapDn = searchAttribute.value;
 
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -471,7 +470,10 @@ public class TrustedLDAPAuthServiceImpl extends XWikiLDAPAuthServiceImpl
                 "Can't find LDAP user DN for [" + ssoRemoteUser + "]");
         }
 
+        // ////////////////////////////////////////////////////////////////////
         // if using form user/password, validate it
+        // ////////////////////////////////////////////////////////////////////
+
         if (checkAuth) {
             if ("1".equals(ldapConfig.getLDAPParam("ldap_validate_password", "0", context))) {
                 String passwordField = ldapConfig.getLDAPParam("ldap_password_field", "userPassword", context);
