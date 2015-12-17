@@ -116,7 +116,7 @@ The escaping of xwiki.authentication.trustedldap.remoteUserMapping properties va
 
 As in:
 
-    xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=MYDOMAIN\\\adstylelogin|MYDOMAIN2=MYDOMAIN2\\\adstylelogin2
+    xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=MYDOMAIN\\\\adstylelogin|MYDOMAIN2=MYDOMAIN2\\\\adstylelogin2
 
 ## 1.1
 
