@@ -101,10 +101,20 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 
 # Changelog
 
+## 1.3
+
+* [AUTHTLDAP-7](http://jira.xwiki.org/browse/AUTHTLDAP-7): User cannot connect using Trusted LDAP auth with form when the DN in his profile is not correct
+
 ## 1.2
 
 * [AUTHTLDAP-5](http://jira.xwiki.org/browse/AUTHTLDAP-5): Impossible to setup group synchronization per domain
 * [AUTHTLDAP-6](http://jira.xwiki.org/browse/AUTHTLDAP-6): Wrong handling of default values 
+
+### Upgrade from pre 1.2
+
+The escaping of xwiki.authentication.trustedldap.remoteUserMapping properties values changed a bit. There is one more pass (to allow escaping | separator). In practive it means that you will have to add another \ in front of each \ you already have in there.
+
+    xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=MYDOMAIN\\\adstylelogin|MYDOMAIN2=MYDOMAIN2\\\adstylelogin2
 
 ## 1.1
 
