@@ -114,6 +114,8 @@ See http://platform.xwiki.org/xwiki/bin/view/AdminGuide/Logging for general info
 
 The escaping of xwiki.authentication.trustedldap.remoteUserMapping properties values changed a bit. There is one more pass (to allow escaping | separator). In practice it means that you will have to add another \ in front of each \ you already have in there.
 
+As in:
+
     xwiki.authentication.trustedldap.remoteUserMapping.ldap_bind_DN=MYDOMAIN=MYDOMAIN\\\adstylelogin|MYDOMAIN2=MYDOMAIN2\\\adstylelogin2
 
 ## 1.1
