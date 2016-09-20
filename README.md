@@ -1,3 +1,5 @@
+**This is the old Trusted LDAP authenticator. All its features has been included in https://github.com/xwiki-contrib/ldap and this extension is no longer maitained.**
+
 Support JAAS remote user based SSO authentication and get informations from LDAP server.
 
 Report any bug or suggest new feature in http://jira.xwiki.org/browse/AUTHTLDAP.
